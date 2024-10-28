@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+
+		<!-- NOTE: This is how you turn off uppercase headings -->
+		<style>.reveal h1,.reveal h2,.reveal h3,.reveal h4,.reveal h5 {text-transform: none;}</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h2>Tree Rotations / AVL Trees</h2>
+					<h3>By Diego Llanes</h3>
+				</section>
+				<section>
+					<section id="whoami" data-background="figs/diego.png" style="color: white !important; -webkit-text-stroke: 1px #000000;">
+						<div style="text-align: left">
+							<h2>Who am I?</h2>
+							<p>my name is Diego and I am a CS Masters student, my hobbies include:</p>
+							<ul>
+								<li class="fragment fade-left"i>rock climbing</li>
+								<li class="fragment fade-left">mountain biking</li>
+								<li class="fragment fade-left">running</li>
+								<li class="fragment fade-left">hiking</li>
+								<li class="fragment fade-left">backpacking</li>
+							</ul>
+						</div>
+					</section>
+					<section>
+						<h2>Masters Program</h2>
+						<p>you may at one point in time have thought to yourself what does a masters degree look like?</p>
+						<p class="fragment fade-left">it mostly includes the following things:</p>
+						<ul>
+							<li class="fragment fade-left"i>taking a class or two</li>
+							<li class="fragment fade-left"i>doing research (loaded answer)</li>
+							<li class="fragment fade-left"i>doing what I'm doing now!</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Research???</h2>
+						<p>what is research??? you may be asking</p>
+						<p class="fragment fade-left">it basically boils down to solving problems that other people haven't solved yet</p>
+						<p class="fragment fade-left">what's so awesome about western is that we have a super awesome undergraduate research program!</p>
+						<p class="fragment fade-left">
+							all that you have to do to get involved is talk to a professor / assistant professor, and see if their interests align with yours!
+						</p>
+					</section>
+					<section>
+						<h2>Research??? (cont.)</h2>
+						<p>all this to say that if you are interested in:</p>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								<ul>
+									<li class="fragment fade-left"i>working on cool stuff</li>
+									<li class="fragment fade-left"i>being stoked</li>
+									<li class="fragment fade-left"i>adding things to your resume</li>
+									<li class="fragment fade-left"i><em><u>possible</u></em> tuition reimbursement</li>
+									<li class="fragment fade-left"i>a job <em><u>possibly</u></em></li>
+								</ul>
+							</div>
+							<div class="flex">
+								<img src="figs/research.jpg" width="400em">
+							</div>
+						</div>
+					</section>
+					<section>
+						<h2>Research??? (cont. cont.)</h2>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								<p>
+									if you are interested, hop on over to the <a href="https://cs.wwu.edu/faculty">faculty page</a>, and look for anyone with the title "Associate/Assistant/* Professor".
+								</p>
+							</div>
+							<div class="flex">
+								<img src="figs/faculty.png" width="1400em">
+							</div>
+						</div>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Remember BSTs?</h2>
+						<p>right, i'm here to teach!</p>
+						<p class="fragment fade-left">last week we learned about how BSTs work!</p>
+						<p class="fragment fade-left">we found out that we could find <u>and</u> insert an element into a BST in <u>usually</u> $lg(n)$ time!</p>
+					</section>
+					<section>
+						<h2>Remember BSTs? (cont.)</h2>
+						<p>but alas! its not <u>always</u> $lg(n)$ for these </p>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								<p class="fragment fade-left">if we insert 4, 7, 16, 20, 37, 38, and 43 in that order...</p>
+								<p class="fragment fade-left">we get a <u>linked list</u>!!! 🤦</p>
+							</div>
+							<div class="flex">
+								<img src="figs/BST_worst_case.gif" width="900em" class="fragment fade-left">
+							</div>
+						</div>
+					</section>
+					<section data-markdown>
+						<!-- <h2>Remember <s>BSTs</s> linked lists? (cont.)</h2> -->
+						<textarea data-template>
+							## Remember <s>BSTs</s> linked lists?
+							Lets look at their worst case for each
+							|  | deletion | insertion | search |
+							| :---: | :---: | :---: | :---: |
+							| Linked List | $O(N)$ | $O(N)$ | $O(N)$ |
+							| BST | $O(N)$ | $O(N)$ | $O(N)$ |
+						</textarea>
+					</section>
+					<section>
+						<h2>Remember <s>BSTs</s> linked lists?</h2>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								<img src="figs/scooby-doo-mask-reveal.jpg" width="500em">
+							</div>
+							<div class="flex">
+								<caption>🤯🤯🤯</caption>
+							</div>
+						</div>
+					</section>
+					<section>
+						<h2>Remember <s>BSTs</s> linked lists?</h2>
+						<p>oh no! what ever will we do???</p>
+						<p class="fragment fade-left">if only we could figure out a way to "balance" this tree!</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Tree Rebalancing</h2>
+						fortunately for us, there does exist such an algorithm for tree rebalancing!
+						<p class="fragment fade-left">lets check it out</p>
+					</section>
+					<section>
+						<h3>Tree Rebalancing: Expected Outcomes</h3>
+						By the end of this lecture we should
+						<ul>
+							<li class="fragment fade-left">be able to find the "balance factor" of a tree</li>
+							<li class="fragment fade-left">do a rotation on a BST</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Balance Factors</h2>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								What is the "balance factor" for a tree?
+								<p class="fragment fade-left">well, we can visually see when a tree is super unbalanced, so a "balance factor" just allows us to formalize that feeling!</p>
+							</div>
+							<div class="flex">
+								<img src="figs/unbalanced.jpg" width="1500em">
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>Balance Factors (ABCD Cards) </h2>
+						<p>what are some ways that we could measure this?</p>
+						<ul style="font-size: .5em">
+							<li class="fragment fade-left" style="margin-bottom: 2em;">A) $BF(root) = Height(root_{left}) - Height(root_{right})$</li>
+							<li class="fragment fade-left" style="margin-bottom: 2em;">B) $BF(root) = Count\_Nodes(root_{left}) - Count\_Nodes(root_{right})$</li>
+							<li class="fragment fade-left" style="margin-bottom: 2em;">C) $BF(root) = Sum\_of\_Heights(root_{left}) + Sum\_of\_Heights(root_{right})$</li>
+							<li class="fragment fade-left" style="margin-bottom: 2em;">D) $BF(root) = abs(Height(root_{left}) - Height(root_{right}))$</li>
+						</ul>
+					</section>
+					<section data-auto-animate>
+						<h2>Balance Factors (ABCD Cards) </h2>
+						<p>what are some ways that we could measure this?</p>
+						<ul style="font-size: 0.5em">
+							<li style="margin-bottom: 2em; color: lime;">A) $BF(root) = Height(root_{left}) - Height(root_{right})$</li>
+							<li style="margin-bottom: 2em;">B) $BF(root) = Count\_Nodes(root_{left}) - Count\_Nodes(root_{right})$</li>
+							<li style="margin-bottom: 2em;">C) $BF(root) = Sum\_of\_Heights(root_{left}) + Sum\_of\_Heights(root_{right})$</li>
+							<li style="margin-bottom: 2em;">D) $BF(root) = abs(Height(root_{left}) - Height(root_{right}))$</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Balance Factors</h2>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								Now that we have a good metric to decide what a balanced tree is, we can use it to fix "bad parts"
+								<p class="fragment fade-left">we just need a tool to do this for us </p>
+							</div>
+							<div class="flex">
+								<img src="figs/balancefactor.png" width="1500em">
+							</div>
+						</div>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Tree Rebalancing</h2>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+							"rotating" a tree might seem complex at first
+							<p class="fragment fade-left">but we're going to break it down into some simple steps</p>
+							</div>
+							<div class="flex">
+								<img src="figs/Animated_Binary_Tree_Rotation.gif" width="700em">
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing</h2>
+						<p>The main three steps of a <u>left</u> rotation are going to be: </p>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								<ol>
+									<li class="fragment fade-left">Transfer $\beta$: $x$’s right subtree becomes $y$’s old left subtree ($\beta$).</li>
+									<li class="fragment fade-left">Transfer the Parent: $y$’s parent becomes $x$’s old parent.</li>
+									<li class="fragment fade-left">Transfer $x$: $x$ becomes $y$’s left subtree.</li>
+								</ol>
+							</div>
+							<div class="flex">
+								<img src="figs/corman.png" width="1000em">
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing</h2>
+						<p>The main three steps of a <u>left</u> rotation are going to be: </p>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								<ol>
+									<li style="color: lime;">Transfer $\beta$: $x$’s right subtree becomes $y$’s old left subtree ($\beta$).</li>
+									<li>Transfer the Parent: $y$’s parent becomes $x$’s old parent.</li>
+									<li>Transfer $x$: $x$ becomes $y$’s left subtree.</li>
+								</ol>
+							</div>
+							<div class="flex">
+								<img src="figs/corman.png" width="1000em">
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing</h2>
+						<p>The main three steps of a <u>left</u> rotation are going to be: </p>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								<ol>
+									<li>Transfer $\beta$: $x$’s right subtree becomes $y$’s old left subtree ($\beta$).</li>
+									<li style="color: lime;">Transfer the Parent: $y$’s parent becomes $x$’s old parent.</li>
+									<li>Transfer $x$: $x$ becomes $y$’s left subtree.</li>
+								</ol>
+							</div>
+							<div class="flex">
+								<img src="figs/corman.png" width="1000em">
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing</h2>
+						<p>The main three steps of a <u>left</u> rotation are going to be: </p>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								<ol>
+									<li>Transfer $\beta$: $x$’s right subtree becomes $y$’s old left subtree ($\beta$).</li>
+									<li>Transfer the Parent: $y$’s parent becomes $x$’s old parent.</li>
+									<li style="color: lime;">Transfer $x$: $x$ becomes $y$’s left subtree.</li>
+								</ol>
+							</div>
+							<div class="flex">
+								<img src="figs/corman.png" width="1000em">
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing (formal alg)</h2>
+						<pre data-id=".code-animation">
+							<code data-trim data-line-numbers>
+							def left_rotate(tree, x):
+							</code>
+						</pre>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing (formal alg)</h2>
+						<pre data-id=".code-animation">
+							<code data-trim data-line-numbers>
+							def left_rotate(tree, x):
+								y = x.right				# set y
+								x.right = y.left
+							</code>
+						</pre>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing (formal alg)</h2>
+						<pre data-id=".code-animation">
+							<code data-trim data-line-numbers>
+							def left_rotate(tree, x):
+								y = x.right				# set y
+								x.right = y.left
+								if y.left is not None:
+									y.left.parent = x
+								y.parent = x.parent		# link x's parent to y
+							</code>
+						</pre>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing (formal alg)</h2>
+						<pre data-id=".code-animation">
+							<code data-trim data-line-numbers>
+							def left_rotate(tree, x):
+								y = x.right				# set y
+								x.right = y.left
+								if y.left is not None:
+									y.left.parent = x
+								y.parent = x.parent		# link x's parent to y
+								if x.parent is None:
+									tree.root = y
+							</code>
+						</pre>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing (formal alg)</h2>
+						<pre data-id=".code-animation">
+							<code data-trim data-line-numbers>
+							def left_rotate(tree, x):
+								y = x.right				# set y
+								x.right = y.left
+								if y.left is not None:
+									y.left.parent = x
+								y.parent = x.parent		# link x's parent to y
+								if x.parent is None:
+									tree.root = y
+								elif x == x.parent.left:
+									x.parent.left = y
+							</code>
+						</pre>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing (formal alg)</h2>
+						<pre data-id=".code-animation">
+							<code data-trim data-line-numbers>
+							def left_rotate(tree, x):
+								y = x.right				# set y
+								x.right = y.left
+								if y.left is not None:
+									y.left.parent = x
+								y.parent = x.parent		# link x's parent to y
+								if x.parent is None:
+									tree.root = y
+								elif x == x.parent.left:
+									x.parent.left = y
+								else:
+									x.parent.right = y
+							</code>
+						</pre>
+					</section>
+					<section data-auto-animate>
+						<h2>Tree Rebalancing (formal alg)</h2>
+						<pre data-id=".code-animation">
+							<code data-trim data-line-numbers>
+							def left_rotate(tree, x):
+								y = x.right				# set y
+								x.right = y.left
+								if y.left is not None:
+									y.left.parent = x
+								y.parent = x.parent		# link x's parent to y
+								if x.parent is None:
+									tree.root = y
+								elif x == x.parent.left:
+									x.parent.left = y
+								else:
+									x.parent.right = y
+								y.left = x
+								x.parent = y
+							</code>
+						</pre>
+					</section>
+					<section>
+						<h2>Tree Rotations</h2>
+						<p>Now that you understand the formal algorithm, lets work it out together! </p>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								<img src="figs/corman.png" width="800em">
+							</div>
+							<div class="flex">
+								<img src="figs/tree_rotate_anim.gif" width="400em">
+							</div>
+						</div>
+					</section>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX ]
+			});
+		</script>
+	</body>
+</html>

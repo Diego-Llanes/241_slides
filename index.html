@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Tree Rebalancing / AVL Trees</title>
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
@@ -29,7 +29,7 @@
 							<h2>Who am I?</h2>
 							<p>my name is Diego and I am a CS Masters student, my hobbies include:</p>
 							<ul>
-								<li class="fragment fade-left"i>rock climbing</li>
+								<li class="fragment fade-left">rock climbing</li>
 								<li class="fragment fade-left">mountain biking</li>
 								<li class="fragment fade-left">running</li>
 								<li class="fragment fade-left">hiking</li>
@@ -42,9 +42,9 @@
 						<p>you may at one point in time have thought to yourself what does a masters degree look like?</p>
 						<p class="fragment fade-left">it mostly includes the following things:</p>
 						<ul>
-							<li class="fragment fade-left"i>taking a class or two</li>
-							<li class="fragment fade-left"i>doing research (loaded answer)</li>
-							<li class="fragment fade-left"i>doing what I'm doing now!</li>
+							<li class="fragment fade-left">taking a class or two</li>
+							<li class="fragment fade-left">doing research (loaded answer)</li>
+							<li class="fragment fade-left">doing what I'm doing now!</li>
 						</ul>
 					</section>
 					<section>
@@ -62,11 +62,11 @@
 						<div style="display: flex; justify-content: space-around; align-items: center;">
 							<div class="flex">
 								<ul>
-									<li class="fragment fade-left"i>working on cool stuff</li>
-									<li class="fragment fade-left"i>being stoked</li>
-									<li class="fragment fade-left"i>adding things to your resume</li>
-									<li class="fragment fade-left"i><em><u>possible</u></em> tuition reimbursement</li>
-									<li class="fragment fade-left"i>a job <em><u>possibly</u></em></li>
+									<li class="fragment fade-left">working on cool stuff</li>
+									<li class="fragment fade-left">being stoked</li>
+									<li class="fragment fade-left">adding things to your resume</li>
+									<li class="fragment fade-left"><em><u>possible</u></em> tuition reimbursement</li>
+									<li class="fragment fade-left">a job <em><u>possibly</u></em></li>
 								</ul>
 							</div>
 							<div class="flex">
@@ -393,6 +393,374 @@
 					</section>
 				</section>
 
+				<section>
+					<section>
+						<h2>AVL Trees (Day 2)</h2>
+						<h3>Diego Llanes</h3>
+					</section>
+					<section>
+						<h2>AVL Trees Expected Outcomes</h2>
+						<p>what I hope you get out of this lecture is the following:</p>
+						<ul>
+							<li class="fragment fade-left">an understanding of what an AVL tree is</li>
+							<li class="fragment fade-left">relative advantages and disadvantages of an AVL tree</li>
+							<li class="fragment fade-left">how to implement their operations</li>
+						</ul>
+					</section>
+					<section>
+						<h2>AVL Trees</h2>
+						<p>what even is an AVL tree to begin with</p>
+						<p class="fragment fade-left">
+						an AVL tree is a data-structure that allows us to guarantee
+						</br>
+						$O(lg(N))$
+						</br>
+						<u>search, insertion, and deletion</u>
+						</p>
+					</section>
+					<section>
+						<h2>AVL Trees</h2>
+						<table>
+							<tr>
+								<th></th>
+								<th>search</th>
+								<th>insertion</th>
+								<th>deletion</th>
+							</tr>
+							<tr>
+								<th>Linked List</th>
+								<th>$O(N)$</th>
+								<th>$O(N)$</th>
+								<th>$O(N)$</th>
+							</tr>
+							<tr>
+								<th>BST</th>
+								<th>$O(N)$</th>
+								<th>$O(N)$</th>
+								<th>$O(N)$</th>
+							</tr>
+							<tr>
+								<th>AVL Tree</th>
+								<th>$O(lg(N))$</th>
+								<th>$O(lg(N))$</th>
+								<th>$O(lg(N))$</th>
+							</tr>
+						</table>
+					</section>
+					<section>
+						<h2>AVL Trees</h2>
+						<p>what if I told you that you have all of the tools that you need to implement AVL trees?</p>
+						<img class="fragment fade-left" src="figs/x_to_doubt.avif" height="200em">
+						<p class="fragment fade-left">but I promise, you do! we just need to tie it all together!</p>
+					</section>
+
+					<section data-auto-animate>
+						<h2>AVL Trees (ABCD Cards)</h2>
+						<p>what was the reason that we had "bad" ($O(N)$) worst case times before?</p>
+						<ul >
+							<li class="fragment fade-left" >A) Tree has too many nodes</li>
+							<li class="fragment fade-left" >B) Not having a "complete tree"</li>
+							<li class="fragment fade-left" >C) Not having a "full tree"</li>
+							<li class="fragment fade-left" >D) Tree getting unbalanced</li>
+						</ul>
+					</section>
+					<section data-auto-animate>
+						<h2>AVL Trees (ABCD Cards)</h2>
+						<p>what was the reason that we had "bad" ($O(N)$) worst case times before?</p>
+						<ul >
+							<li >A) Tree has too many nodes</li>
+							<li >B) Not having a "complete tree"</li>
+							<li >C) Not having a "full tree"</li>
+							<li style="color: lime;">D) Tree getting unbalanced</li>
+						</ul>
+					</section>
+					<section>
+						<h2>AVL Trees</h2>
+						<p>An AVL tree is simply a BST where all nodes in the tree always have a balance factor of 1, -1 or 0</p>
+						<div style="display: flex; justify-content: space-around; align-items: center;">
+							<div class="flex">
+								<strong><u>reminder:</u></strong>
+								</br>
+								<p style="font-size: 0.7em;">$BF(R)=Height(R_l) - Height(R_r)$</p>
+							</div>
+							<div class="flex">
+								<img src="figs/AVL.png" width="400em">
+							</div>
+						</div>
+
+					</section>
+
+				</section>
+
+				<section>
+					<section>
+						<h2>AVL Tree Operations</h2>
+						<p>as we know, the three main operations for a tree are:</p>
+						<ul >
+							<li class="fragment fade-left" >search</li>
+							<li class="fragment fade-left" >insert</li>
+							<li class="fragment fade-left" >delete</li>
+						</ul>
+						<p class="fragment fade-left">
+							so lets check out how these are going to work for an AVL tree!
+						</p>
+
+					</section>
+					<section>
+						<h2>AVL Trees (search)</h2>
+						<p>We can actually inference these data-structures just like a BST because they have the same format!</p>
+						<img src="figs/BST.png" width="800em">
+						<p class="fragment fade-left">lets hope they're all this simple!</p>
+					</section>
+					<section>
+						<h2>AVL Trees (insert)</h2>
+						<p>unfortunately for us, insertion isn't gonna be so easy 🙁</p>
+						<p class="fragment fade-left">
+							<strong>but the main idea is simple</strong> 
+						</p>
+						<ol>
+							<li class="fragment fade-left">insert just like a regular old BST</li>
+							<li class="fragment fade-left">work our way up from the leaf we placed up to root</li>
+							<ul>
+								<li class="fragment fade-left">make sure every thing is still balanced</li>
+								<li class="fragment fade-left">if not balanced $\implies$ balance it</li>
+							</ul>
+						</ol>
+					</section>
+					<section>
+						<h2>AVL Trees (insert)</h2>
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<p>ok if I planned everything correctly there is an example on the whiteboard</p>
+							</div>
+							<div class="flex">
+								<img src="figs/fingers_crossed.png" width="400em">
+							</div>
+						</div>
+					</section>
+					<section>
+						<h2>AVL Trees (insert)</h2>
+						<p>hopefully we just worked through an example on the whiteboard of what an insertion will look like</p>
+					</section>
+					<section>
+						<h2>AVL Trees (insert)</h2>
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<p>it might have been intuitively easy to decide which side needed to get rebalanced there</p>
+								<p class="fragment fade-left">
+									but it is going to be useful if we have some "rules" to follow.
+								</p>
+							</div>
+							<div class="flex">
+								<img src="figs/rules.png" width="400em">
+							</div>
+					</section>
+					<section>
+						<h2>AVL Trees (insert)</h2>
+						<p>before we start an insertion, we assume that the tree is roughly balanced</p>
+						<p class="fragment fade-left">
+							this means that for every node, the following holds:
+							</br>
+							$abs(BF(node)) \le 1$
+						</p>
+						<div class="fragment fade-left">
+							<hr>
+							<p>this is <u>super</u> useful, because there are really only 4 cases that we have to worry about!</p>
+						</div>
+					</section>
+					<section>
+						<h2>AVL Trees (insert)</h2>
+						<p>the four cases are as follows <em>that could</em> unbalance our tree are</p>
+
+						<div class="fragment fade-left">
+							<img src="figs/four_cases.png">
+							<p style="font-size: 0.5em;"> <u>note:</u> $BF(node) = Height(node_r) - Height(node_l)$ in this example</p>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>AVL Trees (insert) (ABCD)</h2>
+						<p>let's focus on <u>case one</u> for now (unbalanced left) </p>
+
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<div class="fragment fade-left">
+									<img src="figs/case_1.png" width="500em">
+								</div>
+							</div>
+							<div class="flex">
+								<p class="fragment fade-left">which of the following could fix our tree?</p>
+								<ul>
+									<li class="fragment fade-left"><code>A) left_rotate(N)</code></li>
+									<li class="fragment fade-left"><code>B) right_rotate(N)</code></li>
+									<li class="fragment fade-left"><code>C) left_rotate(C)</code></li>
+									<li class="fragment fade-left"><code>D) right_rotate(C)</code></li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>AVL Trees (insert) (ABCD)</h2>
+						<p>let's focus on <u>case one</u> for now (unbalanced left) </p>
+
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<div>
+									<img src="figs/case_1.png" width="500em">
+								</div>
+							</div>
+							<div class="flex">
+								<p>which of the following could fix our tree?</p>
+								<ul>
+									<li><code>A) left_rotate(N)</code></li>
+									<li style="color: lime;"><code>B) right_rotate(N)</code></li>
+									<li><code>C) left_rotate(C)</code></li>
+									<li><code>D) right_rotate(C)</code></li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>AVL Trees (insert) (ABCD)</h2>
+						<p>let's focus on <u>case one</u> for now (unbalanced left) </p>
+
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<div>
+									<img src="figs/case_1_solved.png" width="500em">
+								</div>
+							</div>
+							<div class="flex">
+								<p>which of the following could fix our tree?</p>
+								<ul>
+									<li><code>A) left_rotate(N)</code></li>
+									<li style="color: lime;"><code>B) right_rotate(N)</code></li>
+									<li><code>C) left_rotate(C)</code></li>
+									<li><code>D) right_rotate(C)</code></li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>AVL Trees (insert) (ABCD)</h2>
+						<p>great work, now let's focus on <u>case two</u> (unbalanced right) </p>
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<img src="figs/case_2.png" width="800em">
+							</div>
+							<div class="flex">
+								<p class="fragment fade-left">it's going to take two different rotations two do this one</p>
+								<ol>
+									<li class="fragment fade-left"><code>left_rotate(C)</code></li>
+								</ol>
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>AVL Trees (insert) (ABCD)</h2>
+						<p>great work, now let's focus on <u>case two</u> (unbalanced right) </p>
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<img src="figs/case_2_part_1.png" width="800em">
+							</div>
+							<div class="flex">
+								<p>it's going to take two different rotations two do this one</p>
+								<ol>
+									<li><code>left_rotate(C)</code></li>
+								</ol>
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>AVL Trees (insert) (ABCD)</h2>
+						<p>great work, now let's focus on <u>case two</u> (unbalanced right) </p>
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<img src="figs/case_2_part_2.png" width="800em">
+							</div>
+							<div class="flex">
+								<p>it's going to take two different rotations two do this one</p>
+								<ol>
+									<li><code>left_rotate(C)</code></li>
+								</ol>
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>AVL Trees (insert) (ABCD)</h2>
+						<p>great work, now let's focus on <u>case two</u> (unbalanced right) </p>
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<img src="figs/case_2_part_2.png" width="800em">
+							</div>
+							<div class="flex">
+								<p>it's going to take two different rotations two do this one</p>
+								<ol>
+									<li><code>left_rotate(C)</code></li>
+									<li><code>right_rotate(N)</code></li>
+								</ol>
+							</div>
+						</div>
+					</section>
+					<section data-auto-animate>
+						<h2>AVL Trees (insert) (ABCD)</h2>
+						<p>great work, now let's focus on <u>case two</u> (unbalanced right) </p>
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<img src="figs/case_2_part_3.png" width="800em">
+							</div>
+							<div class="flex">
+								<p>it's going to take two different rotations two do this one</p>
+								<ol>
+									<li><code>left_rotate(C)</code></li>
+									<li><code>right_rotate(N)</code></li>
+								</ol>
+							</div>
+						</div>
+					</section>
+					<section>
+						<h2>AVL Trees (insert)</h2>
+						<p>what's nice about what we just learned is that we actually just solved all four cases! </p>
+						<p class="fragment fade-left">
+							let's re-examine our cases and see if we can notice any similarities!
+						</p>
+						<img class="fragment fade-left" src="figs/four_cases.png">
+					</section>
+					<section>
+						<h2>AVL Trees (insert)</h2>
+						<div style="display: flex; align-items: center; justify-content: space-around;">
+							<div class="flex">
+								<p>alright, it's cool visualization time!</p>
+								<p class="fragment fade-left">
+								   if you google "AVL tree visualizer", it should be the first result.
+								</p>
+								<p class="fragment fade-left">
+								   but if it's not, you can navigate to these slides and click <a href="https://www.cs.usfca.edu/~galles/visualization/AVLtree.html">here</a>
+								</p>
+							</div>
+							<div class="flex">
+								<img src="figs/party_time.gif" width="500em">
+							</div>
+						</div>
+					</section>
+				</section>
+				<section>
+					<h2>worksheet?</h2>
+					<div style="display: flex; align-items: center; justify-content: space-around;">
+						<div class="flex">
+							<p>
+								I don't really know how much time that took up, but if there are any remaining seconds,
+								let's work on some worksheets!
+							</p>
+							<p class="fragment fade-left">
+								if you have enjoyed these lectures, please make sure to make note to Dr. Nilles.
+								it would genuinely mean a lot!
+							</p>
+						</div>
+						<div class="flex">
+							<img src="figs/clock.png" width="1000em">
+						</div>
+					</div>
+				</section>
 			</div>
 		</div>
 
